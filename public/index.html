@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf8">
+    <title>乌龟搜</title>
+    <link rel='stylesheet' href='./stylesheets/style.css' />
+    <script type="text/javascript" src="./javascripts/jquery.js"></script>
+    <script type="text/javascript" src="./javascripts/toast.js"></script>
+</head>
+<body>
+	<div class="container">
+		<span class="logo">乌龟搜</span>
+		<div class="search-bar form-inline">
+			<input type="text" class="search-box" placeholder="搜个 iphone 试试" name="keyword">
+			<input id="search-btn" type="button" class="search-btn btn btn-primary" value="慢慢爬">
+		</div>
+		<a href="javacript:void(0)" class="tips">觉得慢？爬虫不给力？点我</a>
+	</div>
+
+	<div class="result-container">
+		<div class="roll-container">
+			<div class="result-title-block">
+				<span class="result-title">关于 "iphone5" 的搜索结果</span>
+			</div>
+			<div class="roll-box">
+			</div>
+
+			<div class="ctl">
+				<div class="arrow prev"></div>
+				<div class="arrow next"></div>
+			</div>
+		</div>
+	</div>
+
+	<footer><span>©Copyleft 2013 wuguisou</span></footer>
+
+	<script type="text/javascript">
+		$(function(){
+			Toast.init();
+
+			var $arrow = $('.arrow'), $roll = $('.roll-box'), 
+				index = 0, length = $('.page').length,
+				width = $(window).width(), Lock = false, keyword = '';
+
+			var rollRight = function() {
+				if (Lock || index + 1 >= length) return;
+				Lock = true;
+				$roll.animate({left: '-=' + width}, function(){
+					index++;
+					Lock = false;
+				});
+			}
+
+			var rollLeft = function() {
+				if (Lock || index - 1 < 0) return;
+				Lock = true;
+				$roll.animate({left: '+=' + width}, function(){
+					index--;
+					Lock = false;
+				});
+			}
+
+			var getData = function(keyword, page, callback, error_callback) {
+				$.ajax({
+				  dataType: "json",
+				  url: '/result/'+keyword,
+				  success: function(data, textStatus, jqXHR) {
+				  	console.log(data);
+				  	callback(data);
+				  },
+				  error: function(jqXHR, textStatus, errorThrown ) {
+				  	typeof error_callback != 'function' || error_callback(errorThrown);
+				  }
+				});
+			}
+
+			var buildItem = function(tmp_data) {
+				switch(tmp_data.from) {
+					case 'jingdong': 
+						tmp_data['price'] = '<img src="' + tmp_data['price'] + '"/>'
+						tmp_data['from'] = '京东商城';
+						break;
+
+					case 'paipai':
+						tmp_data['price'] = '￥' + tmp_data['price'] +'.00';
+						tmp_data['from'] = '拍拍网';
+						break;
+
+					case 'taobao':
+						tmp_data['price'] = '￥' + tmp_data['price'] +'.00';
+						tmp_data['from'] = '淘宝网';
+						break;
+
+					default:
+						break;
+				}
+
+				var itemStr = '<div class="item"><div class="img"><img src="'+ tmp_data['picurl'] +'" alt=""></div><div class="inform"><a href="'+ tmp_data['href'] +'"><span class="name">'+ tmp_data['name'] +'</span></a><span class="price">价格: '+ tmp_data['price'] +'</span><span class="sellnum">销量: '+ tmp_data['sellnum'] +' 件</span><a href="'+ tmp_data['rvurl'] +'"><span class="review">'+ tmp_data['review'] +' 条评论</span></a><span class="from">来自 '+ tmp_data['from'] +'</span></div></div>';
+				
+				return itemStr;
+
+			}
+
+			var buildPages = function(data) {
+				var tmpStr = '<div class="page-container"><div class="page"><div class="row">';
+				for (var i = 0, l = data.length; i < l; ++i) {
+					if ((l - i) < 12) {
+						break;
+					}
+
+					tmpStr += buildItem(data[i]);
+
+					if (i % 4 == 0 && i != 0 && i % 12 != 0) {
+						tmpStr += '</div><div class="row">'
+					}
+
+					if (i % 12 == 0 && i != 0 && ) {
+						if ((l - i) > 12) {
+							tmpStr += '</div></div></div><div class="page-container"><div class="page">';
+						} else {
+							tmpStr += '</div></div></div>';
+						}
+					}
+				}
+
+				return tmpStr;
+			}
+
+			var appendNewPages = function(str) {
+				$roll.append(str);
+				length = $('.page').length;
+			}
+
+			var search = function(keyword, page, func) {
+				var callback = function(data) {
+					// sort();
+					var str = buildPages(data);
+					appendNewPages(str);
+					func();
+				}
+
+				getData(keyword, page, callback, function(error){
+					console.log(error);
+				});
+			}
+
+			$('.item').add($arrow).hover(function(){
+				$(this).addClass('hover');
+			}, function(){
+				$(this).removeClass('hover');
+			});
+
+			$arrow.click(function(){
+				if ($(this).is('.next')) {
+					rollRight();
+				} else {
+					rollLeft();
+				}
+			});
+
+			$('search-btn').click(function(){
+				var toast = Toast("Searching!~").show(true);
+				search('iphone5', 1, function(){
+					toast.close();
+				});
+			});
+		});
+	</script>
+</body>
+</html>

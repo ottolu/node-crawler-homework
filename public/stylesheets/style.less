@@ -1,0 +1,227 @@
+
+// Core variables and mixins
+@import "variables.less"; // Modify this for custom colors, font-sizes, etc
+@import "mixins.less";
+
+// CSS Reset
+@import "reset.less";
+
+@import "component-animations.less";
+@import "pagination.less";
+@import "forms.less";
+@import "buttons.less";
+
+html, body {
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	min-height: 680px;
+}
+
+.tc {
+	text-align: center;
+	display: block;
+}
+
+.container {
+	margin: 100px auto;
+	width: 500px;
+	height: 300px;
+
+	.logo {
+		font-size: 60px;
+		margin: 40px 0;
+		.tc;
+	}
+
+	.search-bar {
+		.search-box {
+			width: 380px;
+		}
+
+		.search-btn {
+			width: 100px;
+		}
+	}
+
+	.tips {
+		color: @grayLight;
+		line-height: 35px;
+		font-size: 14px;
+		.tc;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}
+
+.result-container {
+	width: 100%;
+	height: 100%;
+	min-height: 605px;
+	min-width: 1200px;
+
+	display: none;
+}
+
+.roll-container {
+	margin-top: 50px;
+	position: relative;
+	width: 100%;
+	height: 565px;
+
+	.result-title-block {
+		position: absolute;
+		display: block;
+		line-height: 40px;
+		font-size: 30px;
+		top: -40px;
+		width: 100%;
+		text-align: center;
+
+		.result-title {
+			margin-left: -500px;
+		}
+	}
+
+	.roll-box {
+		width: 100000px;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		.clearfix;
+
+		.page-container {
+			float: left;
+			width: 1300px;
+			height: 100%;
+
+			.page {
+				width: 1000px;
+				height: 100%;
+				margin: 0 auto;
+			}
+		}
+	}
+
+	.ctl {
+		.arrow {
+			position: absolute;
+			top: 38%;
+			background: url(../images/left-arrow.png) no-repeat top left;
+			width: 78px;
+			height: 100px;
+			cursor: pointer;
+			.opacity(20);
+			.transition-duration(.1s);
+
+			&.hover {
+				.opacity(70);
+			}
+
+			&.prev {
+				left: 40px;
+			}
+
+			&.next {
+				right: 40px;
+				background: url(../images/right-arrow.png) no-repeat top left;
+			}
+		}
+	}
+}
+
+.page {
+	.row {
+		height: 130px;
+		width: 100%;
+		margin-bottom: 15px;
+		.clearfix;
+
+		&.last {
+			margin-bottom: 0;
+		}
+
+		.item {
+			width: 320px;
+			height: 100%;
+			float: left;
+			margin-right: 20px;
+			.clearfix;
+			.transition-duration(.8s);
+
+			&.last {
+				margin-right: 0;
+			}
+
+			&.hover {
+				background-color: @grayLighter;
+			}
+
+			.img {
+				padding: 10px;
+				height: 110px;
+				width: 110px;
+				float: left;
+
+				img {
+					width: 100%;
+					height: 100%;
+				}
+			}
+
+			.inform {
+				float: left;
+				padding: 10px 0;
+				width: 190px;
+				height: 110px;
+				font-size: 14px;
+				line-height: 19px;
+				.clearfix;
+
+				.name {
+					font-size: 14px;
+				}
+
+				.price, .sellnum{
+					width: 100%;
+				}
+
+				.sellnum {
+					display: none;
+				}
+
+				.from {
+					color: @orange;
+				}
+
+				span {
+					width: 100%;
+					display: block;
+					float: left;
+				}
+			}
+		}
+	}
+}
+
+.return2index {
+	position: absolute;
+	right: 15%;
+	top: -36px;
+}
+
+footer {
+	position: absolute;
+	bottom: 5px;
+	line-height: 30px;
+	width: 100%;
+	font-size: 14px;
+	color: @blue;
+	.tc;
+}
